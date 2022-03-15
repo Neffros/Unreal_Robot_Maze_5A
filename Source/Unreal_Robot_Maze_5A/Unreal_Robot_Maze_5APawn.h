@@ -49,7 +49,9 @@ public:
 
 	/* Fire a shot in the specified direction */
 	void FireShot(FVector FireDirection);
-
+	
+	/*Shoots a raycast to see collisions*/
+	void Ray(FVector Direction, float distance);
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
 

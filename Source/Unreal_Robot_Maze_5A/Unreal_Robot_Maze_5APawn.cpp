@@ -9,9 +9,11 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Engine/CollisionProfile.h"
+#include "DrawDebugHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
+
 
 const FName AUnreal_Robot_Maze_5APawn::MoveForwardBinding("MoveForward");
 const FName AUnreal_Robot_Maze_5APawn::MoveRightBinding("MoveRight");
@@ -97,6 +99,7 @@ void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 
 	// Try and fire a shot
 	FireShot(FireDirection);
+	Ray(GetActorForwardVector(), 150);
 }
 
 void AUnreal_Robot_Maze_5APawn::FireShot(FVector FireDirection)
@@ -109,13 +112,13 @@ void AUnreal_Robot_Maze_5APawn::FireShot(FVector FireDirection)
 		{
 			const FRotator FireRotation = FireDirection.Rotation();
 			// Spawn projectile at an offset from this pawn
-			const FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
+			const FVector Start = GetActorLocation() + FireRotation.RotateVector(GunOffset);
 
 			UWorld* const World = GetWorld();
 			if (World != nullptr)
 			{
 				// spawn the projectile
-				World->SpawnActor<AUnreal_Robot_Maze_5AProjectile>(SpawnLocation, FireRotation);
+				World->SpawnActor<AUnreal_Robot_Maze_5AProjectile>(Start, FireRotation);
 			}
 
 			bCanFire = false;
@@ -129,6 +132,21 @@ void AUnreal_Robot_Maze_5APawn::FireShot(FVector FireDirection)
 
 			bCanFire = false;
 		}
+	}
+}
+
+void AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance)
+{
+	FVector Start = GetActorLocation();
+	const FVector endLocation = Start + (Direction*distance);
+
+	FHitResult hit;
+	FCollisionQueryParams TraceParams(TEXT("LineOfSight_Trace"), false, this);
+
+	bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, Start, endLocation, ECollisionChannel::ECC_Visibility, TraceParams, FCollisionResponseParams::DefaultResponseParam);
+	DrawDebugLine(GetWorld(), Start, endLocation, FColor::Red, false, 2.f, 0.f, 10);
+	if (hit.GetActor() != NULL) {
+		 GEngine->AddOnScreenDebugMessage(-1,2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 	}
 }
 
