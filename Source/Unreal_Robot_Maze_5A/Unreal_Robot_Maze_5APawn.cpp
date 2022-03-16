@@ -29,6 +29,10 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
 	
+	// Cache our sound effect
+	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
+	FireSound = FireAudio.Object;
+
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -43,8 +47,11 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
 
 	// Movement
-	MoveSpeed = 500.0f;
-
+	MoveSpeed = 1000.0f;
+	// Weapon
+	GunOffset = FVector(90.f, 0.f, 0.f);
+	FireRate = 0.1f;
+	bCanFire = true;
 }
 
 void AUnreal_Robot_Maze_5APawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -60,17 +67,12 @@ void AUnreal_Robot_Maze_5APawn::SetupPlayerInputComponent(class UInputComponent*
 
 void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 {
-	bool hasWallForward = this->Ray(GetActorForwardVector(), 150, FColor::Red);
-	bool hasWallLeft = Ray(-GetActorRightVector(), 150, FColor::Blue);
+	// Find movement direction
+	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
+	const float RightValue = GetInputAxisValue(MoveRightBinding);
 
 	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
-	FVector MoveDirection;
-	if(!hasWallLeft && hasWallLeftOld != hasWallLeft)
-		MoveDirection = -GetActorRightVector();
-	else if(!hasWallForward)
-		MoveDirection = GetActorForwardVector();
-	else 
-		MoveDirection = GetActorRightVector();
+	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 
 	// Calculate  movement
 	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
@@ -89,31 +91,67 @@ void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 			RootComponent->MoveComponent(Deflection, NewRotation, true);
 		}
 	}
-	hasWallForwardOld = hasWallForward;
-	hasWallLeftOld = hasWallLeft;
+	
+	// Create fire direction vector
+	const float FireForwardValue = GetInputAxisValue(FireForwardBinding);
+	const float FireRightValue = GetInputAxisValue(FireRightBinding);
+	const FVector FireDirection = FVector(FireForwardValue, FireRightValue, 0.f);
 
+	// Try and fire a shot
+	FireShot(FireDirection);
+	Ray(GetActorForwardVector(), 150);
 }
 
-bool AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance, FColor color)
+void AUnreal_Robot_Maze_5APawn::FireShot(FVector FireDirection)
 {
-	FVector back = -this->GetActorForwardVector();
-	back.Normalize();
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, back.ToString());
+	// If it's ok to fire again
+	if (bCanFire == true)
+	{
+		// If we are pressing fire stick in a direction
+		if (FireDirection.SizeSquared() > 0.0f)
+		{
+			const FRotator FireRotation = FireDirection.Rotation();
+			// Spawn projectile at an offset from this pawn
+			const FVector Start = GetActorLocation() + FireRotation.RotateVector(GunOffset);
 
-	FVector Start = GetActorLocation() + back * 50;
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
+			{
+				// spawn the projectile
+				World->SpawnActor<AUnreal_Robot_Maze_5AProjectile>(Start, FireRotation);
+			}
+
+			bCanFire = false;
+			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &AUnreal_Robot_Maze_5APawn::ShotTimerExpired, FireRate);
+
+			// try and play the sound if specified
+			if (FireSound != nullptr)
+			{
+				UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+			}
+
+			bCanFire = false;
+		}
+	}
+}
+
+void AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance)
+{
+	FVector Start = GetActorLocation();
 	const FVector endLocation = Start + (Direction*distance);
 
 	FHitResult hit;
 	FCollisionQueryParams TraceParams(TEXT("LineOfSight_Trace"), false, this);
 
 	bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, Start, endLocation, ECollisionChannel::ECC_Visibility, TraceParams, FCollisionResponseParams::DefaultResponseParam);
-	DrawDebugLine(GetWorld(), Start, endLocation, color, false, 0.f, 0.f, 10);
+	DrawDebugLine(GetWorld(), Start, endLocation, FColor::Red, false, 2.f, 0.f, 10);
 	if (hit.GetActor() != NULL) {
-		 GEngine->AddOnScreenDebugMessage(-1,2.0f, color, hit.GetActor()->GetFName().ToString());
-		 return true;
+		 GEngine->AddOnScreenDebugMessage(-1,2.0f, FColor::Red, hit.GetActor()->GetFName().ToString());
 	}
-
-	return false;
 }
 
+void AUnreal_Robot_Maze_5APawn::ShotTimerExpired()
+{
+	bCanFire = true;
+}
 
