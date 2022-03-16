@@ -21,6 +21,10 @@ protected:
 
 public:	
 
+	void SetCameraPosition(FVector newPosition);
+
+	UPROPERTY(EditAnywhere)
+	float ZOffset = 100.0f;
 
 	UPROPERTY(EditAnywhere)
 	AActor* Cam;

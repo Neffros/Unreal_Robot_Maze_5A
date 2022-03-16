@@ -28,3 +28,14 @@ void AGameCameraController::BeginPlay()
 	}
 }
 
+void AGameCameraController::SetCameraPosition(FVector newPosition)
+{
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (playerController)
+	{
+		playerController->SetViewTargetWithBlend(Cam, 1.0f);
+		Cam->SetActorLocation(FVector(newPosition.X, newPosition.Y, newPosition.Z + ZOffset));
+
+	}
+}
+
