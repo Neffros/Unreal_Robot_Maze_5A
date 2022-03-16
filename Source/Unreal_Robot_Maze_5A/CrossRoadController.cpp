@@ -26,7 +26,7 @@ void ACrossRoadController::BeginPlay()
 			crossRoads.Add(crossRoad);
 		}
 	}
-
+	
 	printFString("amount of crossRoads: %d", crossRoads.Num());
 
 }
