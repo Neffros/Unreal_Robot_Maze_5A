@@ -15,6 +15,7 @@
 #include "Sound/SoundBase.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,0.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
 const FName AUnreal_Robot_Maze_5APawn::MoveForwardBinding("MoveForward");
 const FName AUnreal_Robot_Maze_5APawn::MoveRightBinding("MoveRight");
@@ -69,6 +70,7 @@ void AUnreal_Robot_Maze_5APawn::SetupPlayerInputComponent(class UInputComponent*
 
 void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 {
+
 	bool hasWallForward = this->Ray(GetActorForwardVector(), 150, FColor::Red);
 
 	if (hasWallForward && this->isBiasedDirection)

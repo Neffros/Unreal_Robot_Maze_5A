@@ -3,7 +3,7 @@
 
 #include "CrossRoadTrigger.h"
 #include "DrawDebugHelpers.h"
-
+#include "Kismet/GameplayStatics.h"
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
@@ -12,17 +12,28 @@ ACrossRoadTrigger::ACrossRoadTrigger()
 	OnActorBeginOverlap.AddDynamic(this, &ACrossRoadTrigger::OnOverlapBegin);
 }
 
+
+void ACrossRoadTrigger::GetValue()
+{
+    URobot_Maze_Game_Instance* GI = Cast<URobot_Maze_Game_Instance>(UGameplayStatics::GetGameInstance(GetWorld()));
+    if (GI)
+    {
+        printFString("GI value : %d", GI->someValue);
+    }
+    else print("no instance");
+
+}
+
 void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
-    // TD : checker que le joker est activé
     // check if Actors do not equal nullptr and that 
     if (OtherActor && (OtherActor != this))
     {
         AUnreal_Robot_Maze_5APawn* actor = Cast<AUnreal_Robot_Maze_5APawn>(OtherActor);
+        GetValue();
 
         if (actor != NULL)
         {
-            // TD : faire l'enum pour obtenir une direction
             switch (direction)
             {
             case DirectionEnum::None:
@@ -50,7 +61,6 @@ void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AAct
                 break;
             }
 
-            // TD : désactiver le joker
         }
     }
 }
