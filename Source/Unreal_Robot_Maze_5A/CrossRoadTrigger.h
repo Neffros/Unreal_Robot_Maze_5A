@@ -27,5 +27,5 @@ public:
 	DirectionEnum direction;
 	
 	UFUNCTION()
-		void OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor);
+	void OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor);
 };

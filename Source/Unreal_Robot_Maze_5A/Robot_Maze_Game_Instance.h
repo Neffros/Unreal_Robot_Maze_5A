@@ -14,5 +14,14 @@ class UNREAL_ROBOT_MAZE_5A_API URobot_Maze_Game_Instance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
-	bool someValue;
+	// Lifecycle - Begin
+
+	void Init() override;
+
+	// Lifecycle - End
+
+	float GetRecordSeconds() const;
+	bool SetRecordSecondsIfBetter(float seconds);
+private:
+	float _recordSeconds;
 };
