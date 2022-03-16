@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CrossRoadTrigger.h"
 #include "CrossRoadController.generated.h"
 
 UCLASS()
@@ -16,6 +17,7 @@ public:
 	ACrossRoadController();
 
 protected:
+	TArray<ACrossRoadTrigger*> crossRoads;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
