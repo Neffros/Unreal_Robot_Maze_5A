@@ -3,7 +3,6 @@
 
 #include "CrossRoadTrigger.h"
 #include "DrawDebugHelpers.h"
-#include <Unreal_Robot_Maze_5A/Unreal_Robot_Maze_5APawn.h>
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
@@ -16,7 +15,6 @@ ACrossRoadTrigger::ACrossRoadTrigger()
 void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
     // TD : checker que le joker est activé
-    
     // check if Actors do not equal nullptr and that 
     if (OtherActor && (OtherActor != this))
     {
@@ -25,8 +23,32 @@ void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AAct
         if (actor != NULL)
         {
             // TD : faire l'enum pour obtenir une direction
+            switch (direction)
+            {
+            case DirectionEnum::None:
+                if (actor->GetIsBiasedDirection())
+                    actor->SetIsBiasedDirection(!actor->GetIsBiasedDirection());
+                break;
+            case DirectionEnum::Up:
+                actor->SetBiasedDirection(FVector::ForwardVector);
+                direction = DirectionEnum::None;
+                break;
+            case DirectionEnum::Down:
+                actor->SetBiasedDirection(-FVector::ForwardVector);
+                direction = DirectionEnum::None;
 
-            actor->SetBiasedDirection(FVector::ForwardVector);
+                break;
+            case DirectionEnum::Right:
+                actor->SetBiasedDirection(FVector::RightVector);
+                direction = DirectionEnum::None;
+                break;
+            case DirectionEnum::Left:
+                actor->SetBiasedDirection(-FVector::RightVector);
+                direction = DirectionEnum::None;
+                break;
+            default:
+                break;
+            }
 
             // TD : désactiver le joker
         }

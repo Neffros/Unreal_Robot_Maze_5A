@@ -67,7 +67,8 @@ public:
 	void ShotTimerExpired();
 
 	void SetBiasedDirection(FVector direction);
-
+	void SetIsBiasedDirection(bool isBiased);
+	bool GetIsBiasedDirection();
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;

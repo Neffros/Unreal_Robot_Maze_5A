@@ -173,3 +173,13 @@ void AUnreal_Robot_Maze_5APawn::SetBiasedDirection(FVector direction)
 	this->currentDirection = direction;
 }
 
+void AUnreal_Robot_Maze_5APawn::SetIsBiasedDirection(bool isBiased)
+{
+	this->isBiasedDirection = isBiased;
+}
+
+bool AUnreal_Robot_Maze_5APawn::GetIsBiasedDirection()
+{
+	return this->isBiasedDirection;
+}
+
