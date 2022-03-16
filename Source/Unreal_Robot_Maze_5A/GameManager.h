@@ -24,8 +24,8 @@ protected:
 
 public:	
 	// Static names for axis bindings
-	static const FName MoveForwardBinding;
-	static const FName MoveRightBinding;
+	//static const FName MoveForwardBinding;
+	//static const FName MoveRightBinding;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

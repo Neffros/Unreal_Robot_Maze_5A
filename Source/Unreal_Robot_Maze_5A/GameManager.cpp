@@ -3,8 +3,8 @@
 
 #include "GameManager.h"
 
-const FName AUnreal_Robot_Maze_5APawn::MoveForwardBinding("MoveForward");
-const FName AUnreal_Robot_Maze_5APawn::MoveRightBinding("MoveRight");
+//const FName AUnreal_Robot_Maze_5APawn::MoveForwardBinding("MoveForward");
+//const FName AUnreal_Robot_Maze_5APawn::MoveRightBinding("MoveRight");
 
 // Sets default values
 AGameManager::AGameManager()
