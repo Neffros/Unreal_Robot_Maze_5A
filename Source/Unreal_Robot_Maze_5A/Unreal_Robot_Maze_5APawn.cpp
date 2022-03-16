@@ -14,6 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
 
 const FName AUnreal_Robot_Maze_5APawn::MoveForwardBinding("MoveForward");
 const FName AUnreal_Robot_Maze_5APawn::MoveRightBinding("MoveRight");
@@ -47,7 +48,8 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
 
 	// Movement
-	MoveSpeed = 500.0f;
+	this->MoveSpeed = 500.0f;
+	this->isBiasedDirection = false;
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireRate = 0.1f;
@@ -68,20 +70,27 @@ void AUnreal_Robot_Maze_5APawn::SetupPlayerInputComponent(class UInputComponent*
 void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 {
 	bool hasWallForward = this->Ray(GetActorForwardVector(), 150, FColor::Red);
-	bool hasWallLeft = Ray(-GetActorRightVector(), 150, FColor::Blue);
 
-	FVector MoveDirection;
+	if (hasWallForward && this->isBiasedDirection)
+		this->isBiasedDirection = false;
 
-	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
-	if (!hasWallLeft && hasWallLeftOld != hasWallLeft)
-		MoveDirection = -GetActorRightVector();
-	else if (!hasWallForward)
-		MoveDirection = GetActorForwardVector();
-	else
-		MoveDirection = GetActorRightVector();
+	// TD : trouver la condition d'arrêt de biais
+	if (!this->isBiasedDirection)
+	{
+		bool hasWallLeft = Ray(-GetActorRightVector(), 150, FColor::Blue);
+
+		if (!hasWallLeft && hasWallLeftOld != hasWallLeft)
+			this->currentDirection = -GetActorRightVector();
+		else if (!hasWallForward)
+			this->currentDirection = GetActorForwardVector();
+		else
+			this->currentDirection = GetActorRightVector();
+
+		hasWallLeftOld = hasWallLeft;
+	}
 
 	// Calculate  movement
-	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
+	const FVector Movement = this->currentDirection * MoveSpeed * DeltaSeconds;
 
 	// If non-zero size, move this actor
 	if (Movement.SizeSquared() > 0.0f)
@@ -97,8 +106,6 @@ void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 			RootComponent->MoveComponent(Deflection, NewRotation, true);
 		}
 	}
-	hasWallForwardOld = hasWallForward;
-	hasWallLeftOld = hasWallLeft;
 }
 
 void AUnreal_Robot_Maze_5APawn::FireShot(FVector FireDirection)
@@ -158,5 +165,11 @@ bool AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance, FColor co
 void AUnreal_Robot_Maze_5APawn::ShotTimerExpired()
 {
 	bCanFire = true;
+}
+
+void AUnreal_Robot_Maze_5APawn::SetBiasedDirection(FVector direction)
+{
+	this->isBiasedDirection = true;
+	this->currentDirection = direction;
 }
 
