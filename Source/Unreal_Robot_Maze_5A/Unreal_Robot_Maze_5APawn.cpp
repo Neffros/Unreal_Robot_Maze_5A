@@ -47,6 +47,16 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 
 }
 
+void AUnreal_Robot_Maze_5APawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+{
+	check(PlayerInputComponent);
+
+	// set up gameplay key bindings
+	PlayerInputComponent->BindAxis(MoveForwardBinding);
+	PlayerInputComponent->BindAxis(MoveRightBinding);
+	PlayerInputComponent->BindAxis(FireForwardBinding);
+	PlayerInputComponent->BindAxis(FireRightBinding);
+}
 
 void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 {
@@ -88,6 +98,7 @@ bool AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance, FColor co
 {
 	FVector back = -this->GetActorForwardVector();
 	back.Normalize();
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, back.ToString());
 
 	FVector Start = GetActorLocation() + back * 50;
 	const FVector endLocation = Start + (Direction*distance);
@@ -98,9 +109,11 @@ bool AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance, FColor co
 	bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, Start, endLocation, ECollisionChannel::ECC_Visibility, TraceParams, FCollisionResponseParams::DefaultResponseParam);
 	DrawDebugLine(GetWorld(), Start, endLocation, color, false, 0.f, 0.f, 10);
 	if (hit.GetActor() != NULL) {
-		 //GEngine->AddOnScreenDebugMessage(-1,2.0f, color, hit.GetActor()->GetFName().ToString());
+		 GEngine->AddOnScreenDebugMessage(-1,2.0f, color, hit.GetActor()->GetFName().ToString());
 		 return true;
 	}
 
 	return false;
 }
+
+
