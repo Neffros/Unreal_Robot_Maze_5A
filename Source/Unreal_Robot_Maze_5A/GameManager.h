@@ -20,13 +20,11 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void MoveToNextCrossRoad();
+	int index = 0;
 
 public:	
-	// Static names for axis bindings
-	//static const FName MoveForwardBinding;
-	//static const FName MoveRightBinding;
-
+	void MoveToNextCrossRoad();
+	void MoveToPreviousCrossRoad();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

@@ -4,6 +4,10 @@
 #include "GameCameraController.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,0.f, FColor::Green, FString::Printf(TEXT(text), fstring))
+
 // Sets default values
 AGameCameraController::AGameCameraController()
 {
@@ -22,17 +26,19 @@ void AGameCameraController::BeginPlay()
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
 	if (playerController)
 	{
-		playerController->SetViewTargetWithBlend(Cam,5.0f);
-		Cam->SetActorLocation(FVector(110.0f, 1500.0f, 800.0f));
-
+		//playerController->SetViewTargetWithBlend(Cam, 5.0f);
+		playerController->SetViewTarget(Cam);
+		//Cam->SetActorLocation(FVector(110.0f, 1500.0f, 800.0f));
 	}
 }
 
 void AGameCameraController::SetCameraPosition(FVector newPosition)
 {
+	print("settings position");
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
 	if (playerController)
 	{
+		print("player controlling");
 		playerController->SetViewTargetWithBlend(Cam, 1.0f);
 		Cam->SetActorLocation(FVector(newPosition.X, newPosition.Y, newPosition.Z + ZOffset));
 

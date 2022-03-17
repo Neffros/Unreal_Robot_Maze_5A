@@ -2,9 +2,9 @@
 
 
 #include "GameManager.h"
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,0.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
-//const FName AUnreal_Robot_Maze_5APawn::MoveForwardBinding("MoveForward");
-//const FName AUnreal_Robot_Maze_5APawn::MoveRightBinding("MoveRight");
 
 // Sets default values
 AGameManager::AGameManager()
@@ -19,6 +19,23 @@ void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AGameManager::MoveToNextCrossRoad()
+{
+	//index = index + 1 % taille 
+	++index;
+	index = index % CrossRoadController->GetCrossRoads().Num();
+	CameraController->SetCameraPosition(CrossRoadController->GetCrossRoads()[index]->GetActorLocation());
+}
+
+
+void AGameManager::MoveToPreviousCrossRoad()
+{
+	//index = index + 1 % taille 
+	--index;
+	index = index % CrossRoadController->GetCrossRoads().Num();
+	CameraController->SetCameraPosition(CrossRoadController->GetCrossRoads()[index]->GetActorLocation());
 }
 
 // Called every frame
