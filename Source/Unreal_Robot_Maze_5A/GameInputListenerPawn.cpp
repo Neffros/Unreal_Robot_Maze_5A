@@ -27,6 +27,7 @@ void AGameInputListenerPawn::BeginPlay()
 		AGameManager* gameManager = *It;
 		if (gameManager->GetWorld() == world) {
 			GameManager = gameManager;
+			break;
 		}
 	}
 }
@@ -52,7 +53,6 @@ void AGameInputListenerPawn::MoveRight()
 {
 	if (GameManager != NULL)
 		GameManager->MoveToNextCrossRoad();
-
 }
 
 void AGameInputListenerPawn::MoveLeft()
