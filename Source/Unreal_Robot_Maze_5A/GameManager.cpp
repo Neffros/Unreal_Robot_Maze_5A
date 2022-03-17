@@ -3,7 +3,7 @@
 
 #include "GameManager.h"
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
-#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,0.f, FColor::Green, FString::Printf(TEXT(text), fstring))
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
 
 // Sets default values
@@ -23,7 +23,6 @@ void AGameManager::BeginPlay()
 
 void AGameManager::MoveToNextCrossRoad()
 {
-	//index = index + 1 % taille 
 	++index;
 	index = index % CrossRoadController->GetCrossRoads().Num();
 	CameraController->SetCameraPosition(CrossRoadController->GetCrossRoads()[index]->GetActorLocation());
@@ -32,11 +31,36 @@ void AGameManager::MoveToNextCrossRoad()
 
 void AGameManager::MoveToPreviousCrossRoad()
 {
-	//index = index + 1 % taille 
-	--index;
-	index = index % CrossRoadController->GetCrossRoads().Num();
+	if(index == 0)
+		index = CrossRoadController->GetCrossRoads().Num() - 1;
+	else
+		--index;
+
 	CameraController->SetCameraPosition(CrossRoadController->GetCrossRoads()[index]->GetActorLocation());
 }
+
+void AGameManager::ToggleToNextDirection()
+{
+	bool isNextValue = false;
+	for (DirectionEnum direction : TEnumRange<DirectionEnum>()) {
+		if (isNextValue)
+		{
+			CrossRoadController->GetCrossRoads()[index]->direction = direction;
+			CrossRoadController->GetCrossRoads()[index]->UpdateJokerDirection(direction);
+			return;
+		}
+		if (direction == CrossRoadController->GetCrossRoads()[index]->direction)
+			isNextValue;
+	}
+
+	
+}
+
+void AGameManager::ToggleToPreviousDirection()
+{
+}
+
+
 
 // Called every frame
 void AGameManager::Tick(float DeltaTime)

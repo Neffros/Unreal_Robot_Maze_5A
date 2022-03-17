@@ -31,12 +31,10 @@ void ACrossRoadController::BeginPlay()
 	printFString("amount of crossRoads: %d", crossRoads.Num());
 
 }
-
 // Called every frame
 void ACrossRoadController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 TArray<ACrossRoadTrigger*> ACrossRoadController::GetCrossRoads()

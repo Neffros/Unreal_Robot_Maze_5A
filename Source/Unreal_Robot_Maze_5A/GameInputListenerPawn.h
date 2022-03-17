@@ -21,6 +21,8 @@ protected:
 	virtual void BeginPlay() override;
 	void MoveRight();
 	void MoveLeft();
+	void MoveUp();
+	void MoveDown();
 
 public:	
 

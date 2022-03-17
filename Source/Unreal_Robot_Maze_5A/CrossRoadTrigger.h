@@ -6,7 +6,6 @@
 #include <Unreal_Robot_Maze_5A/Unreal_Robot_Maze_5APawn.h>
 #include "Engine/TriggerBox.h"
 #include "Robot_Maze_Game_Instance.h"
-
 #include "CrossRoadTrigger.generated.h"
 
 /**
@@ -25,6 +24,7 @@ public:
 
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 	DirectionEnum direction;
+	void UpdateJokerDirection(DirectionEnum dir);
 	UFUNCTION()
 	void OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor);
 };

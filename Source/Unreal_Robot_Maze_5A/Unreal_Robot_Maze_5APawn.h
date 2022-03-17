@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "Unreal_Robot_Maze_5APawn.generated.h"
 
-
 UENUM(BlueprintType)
 enum class DirectionEnum : uint8
 {
@@ -16,6 +15,7 @@ enum class DirectionEnum : uint8
 	Right UMETA(DisplayName = "Right"),
 	Down UMETA(DisplayName = "Down")
 };
+ENUM_RANGE_BY_VALUES(DirectionEnum, DirectionEnum::None, DirectionEnum::Left, DirectionEnum::Up, DirectionEnum::Right, DirectionEnum::Down)
 
 UCLASS(Blueprintable)
 class AUnreal_Robot_Maze_5APawn : public APawn

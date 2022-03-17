@@ -25,6 +25,36 @@ void ACrossRoadTrigger::GetValue()
 
 }
 
+
+void ACrossRoadTrigger::UpdateJokerDirection(DirectionEnum dir)
+{
+    FRotator newRotation;
+    switch (direction)
+    {
+        case DirectionEnum::None:
+            //todo make arrow not visible
+            break;
+        case DirectionEnum::Up:
+            newRotation = FRotator(0, 0, 90);
+            break;
+        case DirectionEnum::Down:
+            newRotation = FRotator(0, 0, -90);
+            break;
+        case DirectionEnum::Right:
+            newRotation = FRotator(0, 0, 180);
+            break;
+        case DirectionEnum::Left:
+            newRotation = FRotator(0, 0, 0);
+            break;
+        default:
+            break;
+    }
+
+    FQuat rotation = FQuat(newRotation);
+
+    AddActorLocalRotation(rotation, false, 0, ETeleportType::None);
+}
+
 void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
 {
     // check if Actors do not equal nullptr and that 
