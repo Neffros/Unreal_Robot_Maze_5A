@@ -7,22 +7,22 @@ void URobot_Maze_Game_Instance::Init()
 {
 	// TD : Charger le fichier de sauvegarde pour récupérer le temps
 
-	this->_recordSeconds = .0f;
+	this->_recordTimeSpan = FTimespan();
 }
 
-float URobot_Maze_Game_Instance::GetRecordSeconds() const
+FTimespan URobot_Maze_Game_Instance::GetRecordTimeSpan() const
 {
-	return this->_recordSeconds;
+	return this->_recordTimeSpan;
 }
 
-bool URobot_Maze_Game_Instance::SetRecordSecondsIfBetter(float seconds)
+bool URobot_Maze_Game_Instance::SetRecordSecondsIfBetter(FTimespan timeSpan)
 {
-	if (this->_recordSeconds <= seconds)
+	if (this->_recordTimeSpan <= timeSpan)
 		return false;
 
 	// TD : Sauvegarder le temps dans le fichier de sauvegarde
 
-	this->_recordSeconds = seconds;
+	this->_recordTimeSpan = timeSpan;
 	return true;
 }
 

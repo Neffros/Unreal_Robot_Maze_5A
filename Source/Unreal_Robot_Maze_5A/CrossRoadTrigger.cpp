@@ -18,7 +18,7 @@ void ACrossRoadTrigger::GetValue()
     URobot_Maze_Game_Instance* GI = Cast<URobot_Maze_Game_Instance>(UGameplayStatics::GetGameInstance(GetWorld()));
     if (GI)
     {
-        printFString("GI value : %d", GI->someValue);
+        printFString("GI value : %d", 0);
     }
     else print("no instance");
 
