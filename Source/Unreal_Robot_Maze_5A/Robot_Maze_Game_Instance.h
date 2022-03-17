@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Misc/Timespan.h"
 #include "Robot_Maze_Game_Instance.generated.h"
 
 /**
@@ -20,8 +21,10 @@ public:
 
 	// Lifecycle - End
 
-	float GetRecordSeconds() const;
-	bool SetRecordSecondsIfBetter(float seconds);
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Record Timespan", CompactNodeTitle = "Get Record", Keywords = "get record timespan"), Category = Game)
+	FTimespan GetRecordTimeSpan() const;
+
+	bool SetRecordSecondsIfBetter(FTimespan timeSpan);
 private:
-	float _recordSeconds;
+	FTimespan _recordTimeSpan;
 };
