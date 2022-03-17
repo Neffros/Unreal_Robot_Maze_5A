@@ -36,7 +36,7 @@ public:
 	
 	/* How fast the weapon will fire */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	float FireRate;
+	float BatteryLife = 100;
 
 	/* The speed our ship moves around the level */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
@@ -48,7 +48,6 @@ public:
 
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End Actor Interface
 
 	/* Fire a shot in the specified direction */
@@ -62,11 +61,7 @@ public:
 	void SetBiasedDirection(FVector direction);
 	void SetIsBiasedDirection(bool isBiased);
 	bool GetIsBiasedDirection();
-	// Static names for axis bindings
-	static const FName MoveForwardBinding;
-	static const FName MoveRightBinding;
-	static const FName FireForwardBinding;
-	static const FName FireRightBinding;
+
 
 private:
 

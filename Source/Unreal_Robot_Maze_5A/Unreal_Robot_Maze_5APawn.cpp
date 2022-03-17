@@ -17,10 +17,6 @@
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,0.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
-const FName AUnreal_Robot_Maze_5APawn::MoveForwardBinding("MoveForward");
-const FName AUnreal_Robot_Maze_5APawn::MoveRightBinding("MoveRight");
-const FName AUnreal_Robot_Maze_5APawn::FireForwardBinding("FireForward");
-const FName AUnreal_Robot_Maze_5APawn::FireRightBinding("FireRight");
 
 AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 {	
@@ -40,24 +36,13 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 	this->isBiasedDirection = false;
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
-	FireRate = 0.1f;
 	bCanFire = true;
-}
-
-void AUnreal_Robot_Maze_5APawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
-	check(PlayerInputComponent);
-
-	// set up gameplay key bindings
-	PlayerInputComponent->BindAxis(MoveForwardBinding);
-	PlayerInputComponent->BindAxis(MoveRightBinding);
-	PlayerInputComponent->BindAxis(FireForwardBinding);
-	PlayerInputComponent->BindAxis(FireRightBinding);
 }
 
 void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 {
-
+	//this->BatteryLife -= 0.1 * DeltaSeconds;
+	//printFString("BatteryLife : %d", this->BatteryLife);
 	bool hasWallForward = this->Ray(GetActorForwardVector(), 150, FColor::Red);
 
 	if (hasWallForward && this->isBiasedDirection)
@@ -117,7 +102,6 @@ void AUnreal_Robot_Maze_5APawn::FireShot(FVector FireDirection)
 			}
 
 			bCanFire = false;
-			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &AUnreal_Robot_Maze_5APawn::ShotTimerExpired, FireRate);
 
 			// try and play the sound if specified
 			if (FireSound != nullptr)
