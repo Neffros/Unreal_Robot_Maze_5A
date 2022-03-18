@@ -47,6 +47,8 @@ void AGameInputListenerPawn::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("MoveRight", IE_Pressed, this, &AGameInputListenerPawn::MoveRight);
 	PlayerInputComponent->BindAction("MoveLeft", IE_Pressed, this, &AGameInputListenerPawn::MoveLeft);
+	PlayerInputComponent->BindAction("MoveUp", IE_Pressed, this, &AGameInputListenerPawn::MoveUp);
+	PlayerInputComponent->BindAction("MoveDown", IE_Pressed, this, &AGameInputListenerPawn::MoveDown);
 }
 
 void AGameInputListenerPawn::MoveRight()
@@ -58,5 +60,17 @@ void AGameInputListenerPawn::MoveRight()
 void AGameInputListenerPawn::MoveLeft()
 {
 	if (GameManager != NULL)
-		GameManager->MoveToNextCrossRoad();
+		GameManager->MoveToPreviousCrossRoad();
+}
+
+void AGameInputListenerPawn::MoveUp()
+{
+	if (GameManager != NULL)
+		GameManager->ToggleToNextDirection();
+}
+
+void AGameInputListenerPawn::MoveDown()
+{
+	if (GameManager != NULL)
+		GameManager->ToggleToPreviousDirection();
 }

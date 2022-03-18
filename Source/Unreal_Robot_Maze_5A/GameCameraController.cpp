@@ -34,11 +34,9 @@ void AGameCameraController::BeginPlay()
 
 void AGameCameraController::SetCameraPosition(FVector newPosition)
 {
-	print("settings position");
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
 	if (playerController)
 	{
-		print("player controlling");
 		playerController->SetViewTargetWithBlend(Cam, 1.0f);
 		Cam->SetActorLocation(FVector(newPosition.X, newPosition.Y, newPosition.Z + ZOffset));
 
