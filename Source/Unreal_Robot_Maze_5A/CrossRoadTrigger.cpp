@@ -38,6 +38,7 @@ void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AAct
             switch (direction)
             {
             case DirectionEnum::None:
+                // TD : pas de if, appeler une seule méthode : UnbiasDirection, DisableBias, DisableBiasedDirection
                 if (actor->GetIsBiasedDirection())
                     actor->SetIsBiasedDirection(!actor->GetIsBiasedDirection());
                 break;

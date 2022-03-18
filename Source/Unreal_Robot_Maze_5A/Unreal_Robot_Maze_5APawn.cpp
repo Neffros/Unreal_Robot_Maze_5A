@@ -37,18 +37,18 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 	// Weapon
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	bCanFire = true;
+
+	// Desactivating automatic tick to manually manage robot tick in Game Manager
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 {
-	//this->BatteryLife -= 0.1 * DeltaSeconds;
-	//printFString("BatteryLife : %d", this->BatteryLife);
 	bool hasWallForward = this->Ray(GetActorForwardVector(), 150, FColor::Red);
 
 	if (hasWallForward && this->isBiasedDirection)
 		this->isBiasedDirection = false;
 
-	// TD : trouver la condition d'arrêt de biais
 	if (!this->isBiasedDirection)
 	{
 		bool hasWallLeft = Ray(-GetActorRightVector(), 150, FColor::Blue);
@@ -127,12 +127,8 @@ bool AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance, FColor co
 
 	bool actorHit = GetWorld()->LineTraceSingleByChannel(hit, Start, endLocation, ECollisionChannel::ECC_Visibility, TraceParams, FCollisionResponseParams::DefaultResponseParam);
 	DrawDebugLine(GetWorld(), Start, endLocation, color, false, 0.f, 0.f, 10);
-	if (hit.GetActor() != NULL) {
-		//GEngine->AddOnScreenDebugMessage(-1,2.0f, color, hit.GetActor()->GetFName().ToString());
-		return true;
-	}
 
-	return false;
+	return actorHit && hit.GetActor() != NULL;
 }
 
 void AUnreal_Robot_Maze_5APawn::ShotTimerExpired()

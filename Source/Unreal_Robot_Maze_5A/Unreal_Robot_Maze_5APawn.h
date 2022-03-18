@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "Unreal_Robot_Maze_5APawn.generated.h"
 
-
 UENUM(BlueprintType)
 enum class DirectionEnum : uint8
 {
