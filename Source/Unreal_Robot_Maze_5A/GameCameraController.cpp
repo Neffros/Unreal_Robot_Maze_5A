@@ -13,8 +13,6 @@ AGameCameraController::AGameCameraController()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-
 }
 
 // Called when the game starts or when spawned
@@ -22,8 +20,10 @@ void AGameCameraController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitPos = Cam->GetActorLocation();
+	this->_initPos = Cam->GetActorLocation();
+
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+
 	if (playerController)
 	{
 		//playerController->SetViewTargetWithBlend(Cam, 5.0f);
@@ -35,16 +35,16 @@ void AGameCameraController::BeginPlay()
 void AGameCameraController::SetCameraPosition(FVector newPosition)
 {
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+
 	if (playerController)
 	{
 		playerController->SetViewTargetWithBlend(Cam, 1.0f);
 		Cam->SetActorLocation(FVector(newPosition.X, newPosition.Y, newPosition.Z + ZOffset));
-
 	}
 }
 
-FVector AGameCameraController::GetInitPos()
+void AGameCameraController::ReinitializePosition()
 {
-	return this->InitPos;
+	Cam->SetActorLocation(this->_initPos);
 }
 

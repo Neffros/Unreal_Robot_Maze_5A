@@ -24,8 +24,7 @@ void AGameManager::BeginPlay()
 
 void AGameManager::MoveToNextCrossRoad()
 {
-	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
-		return;
+	// TD : à revoir
 	++index;
 	index = index % CrossRoadController->GetCrossRoads().Num();
 	CameraController->SetCameraPosition(CrossRoadController->GetCrossRoads()[index]->GetActorLocation());
@@ -34,8 +33,7 @@ void AGameManager::MoveToNextCrossRoad()
 
 void AGameManager::MoveToPreviousCrossRoad()
 {
-	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
-		return;
+	// TD : à revoir
 	if(index == 0)
 		index = CrossRoadController->GetCrossRoads().Num() - 1;
 	else
@@ -46,29 +44,53 @@ void AGameManager::MoveToPreviousCrossRoad()
 
 void AGameManager::ToggleToNextDirection()
 {
-	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
-		return;
 	bool isNextValue = false;
+	auto crossRoad = CrossRoadController->GetCrossRoads()[index];
+
 	for (DirectionEnum direction : TEnumRange<DirectionEnum>()) {
 		if (isNextValue)
 		{
-			CrossRoadController->GetCrossRoads()[index]->direction = direction;
-			CrossRoadController->GetCrossRoads()[index]->UpdateJokerDirection(direction);
+			crossRoad->direction = direction;
+			crossRoad->UpdateJokerDirection(direction);
 			return;
 		}
-		if (CrossRoadController->GetCrossRoads()[index]->direction == DirectionEnum::Down)
+		if (crossRoad->direction == DirectionEnum::Down)
 		{
-			CrossRoadController->GetCrossRoads()[index]->direction = DirectionEnum::None;
-			CrossRoadController->GetCrossRoads()[index]->UpdateJokerDirection(DirectionEnum::None);
+			crossRoad->direction = DirectionEnum::None;
+			crossRoad->UpdateJokerDirection(DirectionEnum::None);
 			return;
 		}
-		if (direction == CrossRoadController->GetCrossRoads()[index]->direction)
+		if (direction == crossRoad->direction)
 		{
 			isNextValue = true;
 		}
 	}
+}
 
-	
+void AGameManager::ToggleToPreviousDirection()
+{
+	// TD : itération inverse à faire
+	bool isNextValue = false;
+	auto crossRoad = CrossRoadController->GetCrossRoads()[index];
+
+	for (DirectionEnum direction : TEnumRange<DirectionEnum>()) {
+		if (isNextValue)
+		{
+			crossRoad->direction = direction;
+			crossRoad->UpdateJokerDirection(direction);
+			return;
+		}
+		if (crossRoad->direction == DirectionEnum::Down)
+		{
+			crossRoad->direction = DirectionEnum::None;
+			crossRoad->UpdateJokerDirection(DirectionEnum::None);
+			return;
+		}
+		if (direction == crossRoad->direction)
+		{
+			isNextValue = true;
+		}
+	}
 }
 
 // Called every frame
@@ -87,7 +109,7 @@ void AGameManager::Tick(float DeltaTime)
 			return;
 		}
 
-		this->Robot->RobotTick(DeltaTime);
+		this->Robot->Update(DeltaTime);
 	}
 }
 
@@ -139,7 +161,7 @@ void AGameManager::BeginExplorationPhase()
 	this->SetCurrentPhase(GamePhaseEnum::ExplorationPhase);
 	this->SetCurrentRobotBatteryDuration(this->RobotBatteryDuration);
 	this->SetGameTimer(0.0f);
-	this->CameraController->SetCameraPosition(this->CameraController->GetInitPos());
+	this->CameraController->ReinitializePosition();
 }
 
 void AGameManager::BeginEndPhase(bool isWin)

@@ -19,10 +19,19 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void MoveRight();
-	void MoveLeft();
-	void MoveUp();
-	void StartExploration();
+	
+	UFUNCTION()
+	void OnCurrentPhaseUpdate();
+	
+	GamePhaseEnum _oldGamePhase;
+	UInputComponent* _playerInputComponent;
+
+	void BindCrossroadPhase();
+	void BindExplorationPhase();
+	void BindEndPhase();
+	void UnbindCrossroadPhase();
+	void UnbindExplorationPhase();
+	void UnbindEndPhase();
 
 public:	
 

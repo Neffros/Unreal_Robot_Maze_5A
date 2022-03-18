@@ -42,6 +42,7 @@ public:
 	void MoveToNextCrossRoad();
 	void MoveToPreviousCrossRoad();
 	void ToggleToNextDirection();
+	void ToggleToPreviousDirection();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -87,6 +88,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
 	FUpdateDelegate OnWinDelegate;
+
 	virtual void BeginCrossroadPhase();
 	virtual void BeginExplorationPhase();
 	virtual void BeginEndPhase(bool isWin);

@@ -34,12 +34,11 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 	float MoveSpeed;
 
-	// Begin Actor Interface
-	void RobotTick(float DeltaSeconds);
-	// End Actor Interface
 
 	/*Shoots a raycast to see collisions*/
 	bool Ray(FVector Direction, float distance, FColor color);
+	
+	void Update(float DeltaSeconds);
 
 	void SetBiasedDirection(FVector direction);
 	void UnbiasDirection();
