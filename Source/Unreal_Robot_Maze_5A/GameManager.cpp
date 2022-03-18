@@ -153,11 +153,15 @@ float AGameManager::GetBatteryDuration() const
 
 void AGameManager::BeginCrossroadPhase()
 {
+	if (this->GetCurrentPhase() == GamePhaseEnum::CrossroadPhase) return;
+
 	this->SetCurrentPhase(GamePhaseEnum::CrossroadPhase);
 }
 
 void AGameManager::BeginExplorationPhase()
 {
+	if (this->GetCurrentPhase() == GamePhaseEnum::ExplorationPhase) return;
+	
 	this->SetCurrentPhase(GamePhaseEnum::ExplorationPhase);
 	this->SetCurrentRobotBatteryDuration(this->RobotBatteryDuration);
 	this->SetGameTimer(0.0f);
@@ -166,6 +170,8 @@ void AGameManager::BeginExplorationPhase()
 
 void AGameManager::BeginEndPhase(bool isWin)
 {
+	if (this->GetCurrentPhase() == GamePhaseEnum::EndPhase) return;
+
 	this->SetCurrentPhase(GamePhaseEnum::EndPhase);
 
 	if (isWin)
