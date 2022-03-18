@@ -26,7 +26,7 @@ public:
 	void ReinitializePosition();
 
 	UPROPERTY(EditAnywhere)
-	float ZOffset = 100.0f;
+	float ZOffset = 1500.f;
 
 	UPROPERTY(EditAnywhere)
 	AActor* Cam;
