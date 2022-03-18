@@ -85,11 +85,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
 	FUpdateDelegate OnTimerUpdateDelegate;
 
-	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	FVector ExploreCamerPosition;
-
 	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
 	FUpdateDelegate OnWinDelegate;
+protected:
 	virtual void BeginCrossroadPhase();
 	virtual void BeginExplorationPhase();
 	virtual void BeginEndPhase(bool isWin);

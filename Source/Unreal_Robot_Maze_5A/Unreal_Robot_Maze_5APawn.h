@@ -35,10 +35,9 @@ public:
 	float MoveSpeed;
 
 	// Begin Actor Interface
-	//virtual void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;
 	// End Actor Interface
 
-	void RobotTick(float DeltaSeconds);
 	/*Shoots a raycast to see collisions*/
 	bool Ray(FVector Direction, float distance, FColor color);
 

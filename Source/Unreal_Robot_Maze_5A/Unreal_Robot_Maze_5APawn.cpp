@@ -35,7 +35,7 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void AUnreal_Robot_Maze_5APawn::RobotTick(float DeltaSeconds)
+void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 {
 	bool hasWallForward = this->Ray(GetActorForwardVector(), 150, FColor::Red);
 
