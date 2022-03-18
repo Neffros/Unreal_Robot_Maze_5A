@@ -26,19 +26,6 @@ void ACrossRoadTrigger::BeginPlay()
     arrowMesh->SetVisibility(false);
 }
 
-void ACrossRoadTrigger::GetValue()
-{
-    URobot_Maze_Game_Instance* GI = Cast<URobot_Maze_Game_Instance>(UGameplayStatics::GetGameInstance(GetWorld()));
-    if (GI)
-    {
-        print("get value from game instance");
-        //printFString("GI value : %d", GI->someValue);
-    }
-    else print("no instance");
-
-}
-
-
 void ACrossRoadTrigger::UpdateJokerDirection(DirectionEnum dir)
 {
     FVector newRotation;
@@ -77,16 +64,13 @@ void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AAct
     if (OtherActor && (OtherActor != this))
     {
         AUnreal_Robot_Maze_5APawn* actor = Cast<AUnreal_Robot_Maze_5APawn>(OtherActor);
-        GetValue();
 
         if (actor != NULL)
         {
             switch (direction)
             {
             case DirectionEnum::None:
-                // TD : pas de if, appeler une seule méthode : UnbiasDirection, DisableBias, DisableBiasedDirection
-                if (actor->GetIsBiasedDirection())
-                    actor->SetIsBiasedDirection(!actor->GetIsBiasedDirection());
+                actor->UnbiasDirection();
                 break;
             case DirectionEnum::Up:
                 actor->SetBiasedDirection(FVector::ForwardVector);
@@ -95,7 +79,6 @@ void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AAct
             case DirectionEnum::Down:
                 actor->SetBiasedDirection(-FVector::ForwardVector);
                 direction = DirectionEnum::None;
-
                 break;
             case DirectionEnum::Right:
                 actor->SetBiasedDirection(FVector::RightVector);

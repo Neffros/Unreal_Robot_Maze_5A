@@ -27,16 +27,9 @@ AUnreal_Robot_Maze_5APawn::AUnreal_Robot_Maze_5APawn()
 	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
 	
-	// Cache our sound effect
-	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
-	FireSound = FireAudio.Object;
-
 	// Movement
 	this->MoveSpeed = 500.0f;
 	this->isBiasedDirection = false;
-	// Weapon
-	GunOffset = FVector(90.f, 0.f, 0.f);
-	bCanFire = true;
 
 	// Desactivating automatic tick to manually manage robot tick in Game Manager
 	PrimaryActorTick.bCanEverTick = false;
@@ -82,38 +75,6 @@ void AUnreal_Robot_Maze_5APawn::Tick(float DeltaSeconds)
 	}
 }
 
-void AUnreal_Robot_Maze_5APawn::FireShot(FVector FireDirection)
-{
-	// If it's ok to fire again
-	if (bCanFire == true)
-	{
-		// If we are pressing fire stick in a direction
-		if (FireDirection.SizeSquared() > 0.0f)
-		{
-			const FRotator FireRotation = FireDirection.Rotation();
-			// Spawn projectile at an offset from this pawn
-			const FVector Start = GetActorLocation() + FireRotation.RotateVector(GunOffset);
-
-			UWorld* const World = GetWorld();
-			if (World != nullptr)
-			{
-				// spawn the projectile
-				World->SpawnActor<AUnreal_Robot_Maze_5AProjectile>(Start, FireRotation);
-			}
-
-			bCanFire = false;
-
-			// try and play the sound if specified
-			if (FireSound != nullptr)
-			{
-				UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-			}
-
-			bCanFire = false;
-		}
-	}
-}
-
 bool AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance, FColor color)
 {
 	FVector back = -this->GetActorForwardVector();
@@ -131,24 +92,13 @@ bool AUnreal_Robot_Maze_5APawn::Ray(FVector Direction, float distance, FColor co
 	return actorHit && hit.GetActor() != NULL;
 }
 
-void AUnreal_Robot_Maze_5APawn::ShotTimerExpired()
-{
-	bCanFire = true;
-}
-
 void AUnreal_Robot_Maze_5APawn::SetBiasedDirection(FVector direction)
 {
 	this->isBiasedDirection = true;
 	this->currentDirection = direction;
 }
 
-void AUnreal_Robot_Maze_5APawn::SetIsBiasedDirection(bool isBiased)
+void AUnreal_Robot_Maze_5APawn::UnbiasDirection()
 {
-	this->isBiasedDirection = isBiased;
+	this->isBiasedDirection = false;
 }
-
-bool AUnreal_Robot_Maze_5APawn::GetIsBiasedDirection()
-{
-	return this->isBiasedDirection;
-}
-

@@ -20,10 +20,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-
 	ACrossRoadTrigger();
 	
-	void GetValue();
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* arrowMesh;
 

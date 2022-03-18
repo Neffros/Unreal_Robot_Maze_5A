@@ -2,6 +2,7 @@
 
 
 #include "GameManager.h"
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
@@ -141,10 +142,11 @@ void AGameManager::BeginEndPhase(bool isWin)
 	if (isWin)
 	{
 		this->OnWinDelegate.Broadcast();
-		/*
+	
 		URobot_Maze_Game_Instance* GI = Cast<URobot_Maze_Game_Instance>(UGameplayStatics::GetGameInstance(GetWorld()));
 		GI->SetRecordSecondsIfBetter(FTimespan::FromSeconds(this->GetGameTimer()));
-		*/
+
+		// TD : ajouter un texte "Nouveau record !" sur l'UI si SetRecordSecondsIfBetter retourne true
 	}
 	else
 	{
