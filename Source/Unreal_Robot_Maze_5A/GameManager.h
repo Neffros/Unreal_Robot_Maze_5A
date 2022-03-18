@@ -38,7 +38,6 @@ public:
 	void MoveToNextCrossRoad();
 	void MoveToPreviousCrossRoad();
 	void ToggleToNextDirection();
-	void ToggleToPreviousDirection();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

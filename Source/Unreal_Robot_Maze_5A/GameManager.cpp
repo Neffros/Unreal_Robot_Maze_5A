@@ -64,10 +64,6 @@ void AGameManager::ToggleToNextDirection()
 	
 }
 
-void AGameManager::ToggleToPreviousDirection()
-{
-}
-
 
 
 // Called every frame

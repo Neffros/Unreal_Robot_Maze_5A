@@ -23,6 +23,7 @@ void ACrossRoadTrigger::BeginPlay()
 {
     Super::BeginPlay();
     arrowMesh->SetRelativeLocation(FVector(0, 0, 0));
+    arrowMesh->SetVisibility(false);
 }
 
 void ACrossRoadTrigger::GetValue()
@@ -41,10 +42,12 @@ void ACrossRoadTrigger::GetValue()
 void ACrossRoadTrigger::UpdateJokerDirection(DirectionEnum dir)
 {
     FVector newRotation;
+    arrowMesh->SetVisibility(true);
+
     switch (dir)
     {
         case DirectionEnum::None:
-            //todo make arrow not visible
+            arrowMesh->SetVisibility(false);
             break;
         case DirectionEnum::Up:
             newRotation = FVector(0, 0, 90);
