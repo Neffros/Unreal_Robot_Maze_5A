@@ -17,6 +17,8 @@ enum class GamePhaseEnum : uint8
 	EndPhase UMETA(DisplayName = "End Phase")
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateDelegate);
+
 UCLASS()
 class UNREAL_ROBOT_MAZE_5A_API AGameManager : public AActor
 {
@@ -30,6 +32,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	int index = 0;
+
+	// TD : states et delegates à rassembler dans un Game State pour plus de propreté
 
 	GamePhaseEnum _currentPhase;
 	float _currentRobotBatteryDuration;
@@ -57,18 +61,35 @@ public:
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Current Phase", CompactNodeTitle = "Get Phase", Keywords = "get current phase"), Category = Game)
 	virtual GamePhaseEnum GetCurrentPhase() const;
-
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Game Timer", CompactNodeTitle = "Get Timer", Keywords = "get timer"), Category = Game)
-	virtual float GetGameTimer() const;
-	virtual void SetGameTimer(float seconds);
+	virtual void SetCurrentPhase(GamePhaseEnum phase);
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Current Robot Battery Duration", CompactNodeTitle = "Get Battery", Keywords = "get battery robot duration"), Category = Game)
 	virtual float GetCurrentRobotBatteryDuration() const;
 	virtual void SetCurrentRobotBatteryDuration(float duration);
 
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Game Timer", CompactNodeTitle = "Get Timer", Keywords = "get timer"), Category = Game)
+	virtual float GetGameTimer() const;
+	virtual void SetGameTimer(float seconds);
+
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Max Battery Duration", CompactNodeTitle = "Get Max Battery", Keywords = "get max battery robot duration"), Category = Game)
 	virtual float GetBatteryDuration() const;
+
+	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
+	FUpdateDelegate OnCurrentPhaseUpdateDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
+	FUpdateDelegate OnCurrentRobotBatteryDurationUpdateDelegate;
+	
+	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
+	FUpdateDelegate OnLoseDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
+	FUpdateDelegate OnTimerUpdateDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Game Manager")
+	FUpdateDelegate OnWinDelegate;
 protected:
+	virtual void BeginCrossroadPhase();
 	virtual void BeginExplorationPhase();
 	virtual void BeginEndPhase(bool isWin);
 };

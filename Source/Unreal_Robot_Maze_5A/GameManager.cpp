@@ -18,7 +18,7 @@ void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->_currentPhase = GamePhaseEnum::CrossroadPhase;
+	this->BeginExplorationPhase();
 }
 
 void AGameManager::MoveToNextCrossRoad()
@@ -60,19 +60,17 @@ void AGameManager::ToggleToPreviousDirection()
 {
 }
 
-
-
 // Called every frame
 void AGameManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (this->_currentPhase == GamePhaseEnum::ExplorationPhase)
+	if (this->GetCurrentPhase() == GamePhaseEnum::ExplorationPhase)
 	{
 		this->SetGameTimer(this->_gameTimer + DeltaTime);
 		this->SetCurrentRobotBatteryDuration(this->_currentRobotBatteryDuration - DeltaTime);
 
-		if (this->_currentRobotBatteryDuration < 0.0f)
+		if (this->GetCurrentRobotBatteryDuration() < 0.0f)
 		{
 			this->BeginEndPhase(false);
 			return;
@@ -87,6 +85,12 @@ GamePhaseEnum AGameManager::GetCurrentPhase() const
 	return this->_currentPhase;
 }
 
+void AGameManager::SetCurrentPhase(GamePhaseEnum phase)
+{
+	this->_currentPhase = phase;
+	this->OnCurrentPhaseUpdateDelegate.Broadcast();
+}
+
 float AGameManager::GetGameTimer() const
 {
 	return this->_gameTimer;
@@ -95,6 +99,7 @@ float AGameManager::GetGameTimer() const
 void AGameManager::SetGameTimer(float seconds)
 {
 	this->_gameTimer = seconds;
+	this->OnTimerUpdateDelegate.Broadcast();
 }
 
 float AGameManager::GetCurrentRobotBatteryDuration() const
@@ -105,6 +110,7 @@ float AGameManager::GetCurrentRobotBatteryDuration() const
 void AGameManager::SetCurrentRobotBatteryDuration(float duration)
 {
 	this->_currentRobotBatteryDuration = duration;
+	this->OnCurrentRobotBatteryDurationUpdateDelegate.Broadcast();
 }
 
 float AGameManager::GetBatteryDuration() const
@@ -112,19 +118,33 @@ float AGameManager::GetBatteryDuration() const
 	return this->RobotBatteryDuration;
 }
 
+void AGameManager::BeginCrossroadPhase()
+{
+	this->SetCurrentPhase(GamePhaseEnum::CrossroadPhase);
+}
+
 void AGameManager::BeginExplorationPhase()
 {
-	this->_currentPhase = GamePhaseEnum::ExplorationPhase;
+	this->SetCurrentPhase(GamePhaseEnum::ExplorationPhase);
 	this->SetCurrentRobotBatteryDuration(this->RobotBatteryDuration);
 	this->SetGameTimer(0.0f);
-
-	// TD : activer l'UI d'exploration
 }
 
 void AGameManager::BeginEndPhase(bool isWin)
 {
-	this->_currentPhase = GamePhaseEnum::EndPhase;
+	this->SetCurrentPhase(GamePhaseEnum::EndPhase);
 
-	// TD : UI - update texte de temps, afficher victoire ou défaite, activer l'UI
+	if (isWin)
+	{
+		this->OnWinDelegate.Broadcast();
+		/*
+		URobot_Maze_Game_Instance* GI = Cast<URobot_Maze_Game_Instance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		GI->SetRecordSecondsIfBetter(FTimespan::FromSeconds(this->GetGameTimer()));
+		*/
+	}
+	else
+	{
+		this->OnLoseDelegate.Broadcast();
+	}
 }
 
