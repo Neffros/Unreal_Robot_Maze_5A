@@ -92,6 +92,7 @@ void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AAct
                 break;
             }
 
+            arrowMesh->SetVisibility(false);
         }
     }
 }

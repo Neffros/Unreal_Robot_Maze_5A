@@ -19,11 +19,13 @@ void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->BeginExplorationPhase();
+	this->BeginCrossroadPhase();
 }
 
 void AGameManager::MoveToNextCrossRoad()
 {
+	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
+		return;
 	++index;
 	index = index % CrossRoadController->GetCrossRoads().Num();
 	CameraController->SetCameraPosition(CrossRoadController->GetCrossRoads()[index]->GetActorLocation());
@@ -32,6 +34,8 @@ void AGameManager::MoveToNextCrossRoad()
 
 void AGameManager::MoveToPreviousCrossRoad()
 {
+	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
+		return;
 	if(index == 0)
 		index = CrossRoadController->GetCrossRoads().Num() - 1;
 	else
@@ -42,6 +46,8 @@ void AGameManager::MoveToPreviousCrossRoad()
 
 void AGameManager::ToggleToNextDirection()
 {
+	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
+		return;
 	bool isNextValue = false;
 	for (DirectionEnum direction : TEnumRange<DirectionEnum>()) {
 		if (isNextValue)
@@ -81,7 +87,7 @@ void AGameManager::Tick(float DeltaTime)
 			return;
 		}
 
-		this->Robot->Tick(DeltaTime);
+		this->Robot->RobotTick(DeltaTime);
 	}
 }
 
@@ -133,6 +139,7 @@ void AGameManager::BeginExplorationPhase()
 	this->SetCurrentPhase(GamePhaseEnum::ExplorationPhase);
 	this->SetCurrentRobotBatteryDuration(this->RobotBatteryDuration);
 	this->SetGameTimer(0.0f);
+	//todo set camera position based on vector in uparam 
 }
 
 void AGameManager::BeginEndPhase(bool isWin)

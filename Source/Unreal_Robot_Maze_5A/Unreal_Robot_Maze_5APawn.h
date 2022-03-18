@@ -35,7 +35,7 @@ public:
 	float MoveSpeed;
 
 	// Begin Actor Interface
-	virtual void Tick(float DeltaSeconds) override;
+	void RobotTick(float DeltaSeconds);
 	// End Actor Interface
 
 	/*Shoots a raycast to see collisions*/

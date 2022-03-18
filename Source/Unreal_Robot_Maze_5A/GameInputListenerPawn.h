@@ -22,6 +22,7 @@ protected:
 	void MoveRight();
 	void MoveLeft();
 	void MoveUp();
+	void StartExploration();
 
 public:	
 

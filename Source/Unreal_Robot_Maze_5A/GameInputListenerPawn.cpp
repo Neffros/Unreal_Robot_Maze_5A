@@ -48,6 +48,7 @@ void AGameInputListenerPawn::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("MoveRight", IE_Pressed, this, &AGameInputListenerPawn::MoveRight);
 	PlayerInputComponent->BindAction("MoveLeft", IE_Pressed, this, &AGameInputListenerPawn::MoveLeft);
 	PlayerInputComponent->BindAction("MoveUp", IE_Pressed, this, &AGameInputListenerPawn::MoveUp);
+	PlayerInputComponent->BindAction("StartExplore", IE_Pressed, this, &AGameInputListenerPawn::StartExploration);
 }
 
 void AGameInputListenerPawn::MoveRight()
@@ -66,4 +67,10 @@ void AGameInputListenerPawn::MoveUp()
 {
 	if (GameManager != NULL)
 		GameManager->ToggleToNextDirection();
+}
+
+void AGameInputListenerPawn::StartExploration()
+{
+	if (GameManager != NULL)
+		GameManager->BeginExplorationPhase();
 }
