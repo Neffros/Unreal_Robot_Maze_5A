@@ -22,7 +22,7 @@ void AGameCameraController::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	InitPos = Cam->GetActorLocation();
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
 	if (playerController)
 	{
@@ -41,5 +41,10 @@ void AGameCameraController::SetCameraPosition(FVector newPosition)
 		Cam->SetActorLocation(FVector(newPosition.X, newPosition.Y, newPosition.Z + ZOffset));
 
 	}
+}
+
+FVector AGameCameraController::GetInitPos()
+{
+	return this->InitPos;
 }
 

@@ -139,7 +139,7 @@ void AGameManager::BeginExplorationPhase()
 	this->SetCurrentPhase(GamePhaseEnum::ExplorationPhase);
 	this->SetCurrentRobotBatteryDuration(this->RobotBatteryDuration);
 	this->SetGameTimer(0.0f);
-	//todo set camera position based on vector in uparam 
+	this->CameraController->SetCameraPosition(this->CameraController->GetInitPos());
 }
 
 void AGameManager::BeginEndPhase(bool isWin)

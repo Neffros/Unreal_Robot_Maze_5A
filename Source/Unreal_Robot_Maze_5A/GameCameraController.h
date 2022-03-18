@@ -19,10 +19,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	FVector InitPos;
 public:	
 
 	void SetCameraPosition(FVector newPosition);
-
+	FVector GetInitPos();
 	UPROPERTY(EditAnywhere)
 	float ZOffset = 100.0f;
 
