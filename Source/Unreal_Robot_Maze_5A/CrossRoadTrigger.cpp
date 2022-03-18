@@ -10,8 +10,21 @@
 ACrossRoadTrigger::ACrossRoadTrigger()
 {
 	OnActorBeginOverlap.AddDynamic(this, &ACrossRoadTrigger::OnOverlapBegin);
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> loadedMesh(TEXT("/Game/Geometry/Meshes/Arrow.Arrow"));
+    arrowMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("loadedMesh"));
+    arrowMesh->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
+    arrowMesh->SetStaticMesh(loadedMesh.Object);
+    //arrowMesh->SetRelativeLocation(FVector(0, 0, 200));
+    SetActorHiddenInGame(false);
+   
 }
 
+void ACrossRoadTrigger::BeginPlay()
+{
+    Super::BeginPlay();
+    arrowMesh->SetRelativeLocation(FVector(0, 0, 0));
+    arrowMesh->SetVisibility(false);
+}
 
 void ACrossRoadTrigger::GetValue()
 {
@@ -28,31 +41,34 @@ void ACrossRoadTrigger::GetValue()
 
 void ACrossRoadTrigger::UpdateJokerDirection(DirectionEnum dir)
 {
-    FRotator newRotation;
-    switch (direction)
+    FVector newRotation;
+    arrowMesh->SetVisibility(true);
+
+    switch (dir)
     {
         case DirectionEnum::None:
-            //todo make arrow not visible
+            arrowMesh->SetVisibility(false);
             break;
         case DirectionEnum::Up:
-            newRotation = FRotator(0, 0, 90);
+            newRotation = FVector(0, 0, 90);
             break;
         case DirectionEnum::Down:
-            newRotation = FRotator(0, 0, -90);
+            newRotation = FVector(0, 0, -90);
             break;
         case DirectionEnum::Right:
-            newRotation = FRotator(0, 0, 180);
+            newRotation = FVector(0, 0, 180);
             break;
         case DirectionEnum::Left:
-            newRotation = FRotator(0, 0, 0);
+            newRotation = FVector(0, 0, 0);
             break;
         default:
             break;
     }
+    print("switching actor rotation");
+    print(newRotation.ToString());
 
-    FQuat rotation = FQuat(newRotation);
-
-    AddActorLocalRotation(rotation, false, 0, ETeleportType::None);
+    FQuat quaternion(FRotator::MakeFromEuler(newRotation));
+    arrowMesh->SetRelativeRotation(quaternion);
 }
 
 void ACrossRoadTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)
