@@ -7,7 +7,7 @@ void URobot_Maze_Game_Instance::Init()
 {
 	// TD : Charger le fichier de sauvegarde pour récupérer le temps
 
-	this->_recordTimeSpan = FTimespan();
+	this->_recordTimeSpan = FTimespan::MaxValue();
 }
 
 FTimespan URobot_Maze_Game_Instance::GetRecordTimeSpan() const
