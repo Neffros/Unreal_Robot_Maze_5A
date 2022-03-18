@@ -4,6 +4,7 @@
 #include "GameManager.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
+#define printZero(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, text)
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
 
@@ -19,11 +20,13 @@ void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->BeginExplorationPhase();
+	this->BeginCrossroadPhase();
 }
 
 void AGameManager::MoveToNextCrossRoad()
 {
+	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
+		return;
 	++index;
 	index = index % CrossRoadController->GetCrossRoads().Num();
 	CameraController->SetCameraPosition(CrossRoadController->GetCrossRoads()[index]->GetActorLocation());
@@ -32,6 +35,8 @@ void AGameManager::MoveToNextCrossRoad()
 
 void AGameManager::MoveToPreviousCrossRoad()
 {
+	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
+		return;
 	if(index == 0)
 		index = CrossRoadController->GetCrossRoads().Num() - 1;
 	else
@@ -42,6 +47,8 @@ void AGameManager::MoveToPreviousCrossRoad()
 
 void AGameManager::ToggleToNextDirection()
 {
+	if (this->GetCurrentPhase() != GamePhaseEnum::CrossroadPhase)
+		return;
 	bool isNextValue = false;
 	for (DirectionEnum direction : TEnumRange<DirectionEnum>()) {
 		if (isNextValue)
@@ -69,9 +76,9 @@ void AGameManager::ToggleToNextDirection()
 void AGameManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	if (this->GetCurrentPhase() == GamePhaseEnum::ExplorationPhase)
 	{
+		printZero("explore");
 		this->SetGameTimer(this->_gameTimer + DeltaTime);
 		this->SetCurrentRobotBatteryDuration(this->_currentRobotBatteryDuration - DeltaTime);
 
@@ -81,8 +88,9 @@ void AGameManager::Tick(float DeltaTime)
 			return;
 		}
 
-		this->Robot->Tick(DeltaTime);
+		this->Robot->RobotTick(DeltaTime);
 	}
+	else printZero("crossroad");
 }
 
 GamePhaseEnum AGameManager::GetCurrentPhase() const
@@ -133,6 +141,7 @@ void AGameManager::BeginExplorationPhase()
 	this->SetCurrentPhase(GamePhaseEnum::ExplorationPhase);
 	this->SetCurrentRobotBatteryDuration(this->RobotBatteryDuration);
 	this->SetGameTimer(0.0f);
+	this->CameraController->SetCameraPosition(ExploreCamerPosition);
 }
 
 void AGameManager::BeginEndPhase(bool isWin)
