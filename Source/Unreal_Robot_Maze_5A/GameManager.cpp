@@ -18,7 +18,6 @@ AGameManager::AGameManager()
 void AGameManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AGameManager::MoveToNextCrossRoad()
@@ -49,8 +48,16 @@ void AGameManager::ToggleToNextDirection()
 			CrossRoadController->GetCrossRoads()[index]->UpdateJokerDirection(direction);
 			return;
 		}
+		if (CrossRoadController->GetCrossRoads()[index]->direction == DirectionEnum::Down)
+		{
+			CrossRoadController->GetCrossRoads()[index]->direction = DirectionEnum::None;
+			CrossRoadController->GetCrossRoads()[index]->UpdateJokerDirection(DirectionEnum::None);
+			return;
+		}
 		if (direction == CrossRoadController->GetCrossRoads()[index]->direction)
-			isNextValue;
+		{
+			isNextValue = true;
+		}
 	}
 
 	

@@ -16,11 +16,16 @@ class UNREAL_ROBOT_MAZE_5A_API ACrossRoadTrigger : public ATriggerBox
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+
 public:
 
 	ACrossRoadTrigger();
 	
 	void GetValue();
+	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* arrowMesh;
 
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 	DirectionEnum direction;
