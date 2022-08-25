@@ -4,8 +4,6 @@
 #include "CrossRoadTrigger.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
-#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
 ACrossRoadTrigger::ACrossRoadTrigger()
 {
@@ -14,7 +12,6 @@ ACrossRoadTrigger::ACrossRoadTrigger()
     arrowMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("loadedMesh"));
     arrowMesh->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
     arrowMesh->SetStaticMesh(loadedMesh.Object);
-    //arrowMesh->SetRelativeLocation(FVector(0, 0, 200));
     SetActorHiddenInGame(false);
    
 }
@@ -51,8 +48,6 @@ void ACrossRoadTrigger::UpdateJokerDirection(DirectionEnum dir)
         default:
             break;
     }
-    print("switching actor rotation");
-    print(newRotation.ToString());
 
     FQuat quaternion(FRotator::MakeFromEuler(newRotation));
     arrowMesh->SetRelativeRotation(quaternion);

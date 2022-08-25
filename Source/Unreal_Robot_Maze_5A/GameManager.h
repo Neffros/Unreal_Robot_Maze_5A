@@ -37,6 +37,7 @@ protected:
 
 	GamePhaseEnum _currentPhase;
 	float _currentRobotBatteryDuration;
+	int _enabledCrossroadHints;
 	float _gameTimer;
 public:
 	void MoveToNextCrossRoad();

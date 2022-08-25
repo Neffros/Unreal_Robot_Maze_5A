@@ -1,10 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "CrossRoadController.h"
 #include "Engine/World.h"
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green, text)
-#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,5.f, FColor::Green, FString::Printf(TEXT(text), fstring))
 
 // Sets default values
 ACrossRoadController::ACrossRoadController()
@@ -26,10 +23,6 @@ void ACrossRoadController::BeginPlay()
 			crossRoads.Add(crossRoad);
 		}
 	}
-	
-	//
-	printFString("amount of crossRoads: %d", crossRoads.Num());
-
 }
 // Called every frame
 void ACrossRoadController::Tick(float DeltaTime)
